@@ -1,0 +1,41 @@
+#!/usr/bin/with-contenv bash
+
+set -e
+
+if [ "$DERP_CERTMODE" != "acme.sh" ]; then
+    exit 0
+fi
+
+if [ -z "$ACME_SH_EMAIL" ]; then
+    echo "[acme.sh] ACME_SH_EMAIL is not set. Exiting..."
+    exit 1
+fi
+
+ACME_SH_ARGS="--home /app/acme.sh --config-home /data/acme.sh --accountemail $ACME_SH_EMAIL"
+
+echo "[acme.sh] Installing crontab..."
+echo "0 0 * * * /app/acme.sh/acme.sh --cron $ACME_SH_ARGS" | crontab -
+
+if [ -f /data/cert/$DERP_HOSTNAME.crt ]; then
+    echo "[acme.sh] Renewing certificate for $DERP_HOSTNAME..."
+    s6-setuidgid abc \
+        /app/acme.sh/acme.sh \
+            --renew --force $ACME_SH_ARGS \
+            --domain $DERP_HOSTNAME
+else
+    echo "[acme.sh] Issueing certificate for $DERP_HOSTNAME..."
+    s6-setuidgid abc \
+        /app/acme.sh/acme.sh \
+            --issue $ACME_SH_ARGS \
+            --domain $DERP_HOSTNAME \
+            --dns $ACME_SH_DNSAPI
+fi
+
+echo "[acme.sh] Installing certificate to derper..."
+s6-setuidgid abc \
+    /app/acme.sh/acme.sh \
+        --install-cert $ACME_SH_ARGS \
+        --domain $DERP_HOSTNAME \
+        --cert-file /data/cert/$DERP_HOSTNAME.crt \
+        --key-file /data/cert/$DERP_HOSTNAME.key \
+        --fullchain-file /data/cert/$DERP_HOSTNAME.fullchain.crt

@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /data/acme.sh /data/cert /data/derper
+lsiown  -R abc:abc /data

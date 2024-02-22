@@ -41,6 +41,5 @@ s6-setuidgid abc \
     /app/acme.sh/acme.sh \
         --install-cert $ACME_SH_ARGS \
         --domain $DERP_HOSTNAME \
-        --cert-file /data/cert/$DERP_HOSTNAME.crt \
-        --key-file /data/cert/$DERP_HOSTNAME.key \
-        --fullchain-file /data/cert/$DERP_HOSTNAME.fullchain.crt
+        --fullchain-file /data/cert/$DERP_HOSTNAME.crt \
+        --key-file /data/cert/$DERP_HOSTNAME.key

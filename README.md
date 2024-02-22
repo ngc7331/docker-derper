@@ -37,6 +37,7 @@ If `DERP_CERTMODE` is set to `acme.sh`, the following environment variables are 
 |----------|---------|-------------|
 | `ACME_SH_EMAIL` |  | The email address for ZeroSSL registration |
 | `ACME_SH_DNSAPI` |  | The API used to pass DNS challenge, see [official docs](https://github.com/acmesh-official/acme.sh/wiki/dnsapi) |
+| `ACME_SH_CA` | letsencrypt | The ACME server, see [official docs](https://github.com/acmesh-official/acme.sh/wiki/Server) |
 | Other variables required by API |  | See [official docs](https://github.com/acmesh-official/acme.sh/wiki/dnsapi) |
 
 Example using Cloudflare:

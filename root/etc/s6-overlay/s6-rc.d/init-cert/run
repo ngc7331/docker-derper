@@ -13,6 +13,11 @@ fi
 
 ACME_SH_ARGS="--home /app/acme.sh --config-home /data/acme.sh --accountemail $ACME_SH_EMAIL"
 
+# Change CA
+echo "[acme.sh] Changing CA to $ACME_SH_CA..."
+s6-setuidgid abc \
+    /app/acme.sh/acme.sh $ACME_SH_ARGS --set-default-ca --server $ACME_SH_CA
+
 echo "[acme.sh] Installing crontab..."
 echo "0 0 * * * /app/acme.sh/acme.sh --cron $ACME_SH_ARGS" | crontab -
 

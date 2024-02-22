@@ -32,6 +32,7 @@ ENV DERP_VERIFY_CLIENTS=false
 # acme.sh Envs
 ENV ACME_SH_EMAIL=
 ENV ACME_SH_DNSAPI=
+ENV ACME_SH_CA=letsencrypt
 # ... other dnsapi envs
 
 VOLUME [ "/data" ]

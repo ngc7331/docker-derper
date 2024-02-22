@@ -2,26 +2,23 @@
 
 CERTDIR=/data/cert
 CONFIG=/data/derper/derper.key
-HTTP_PORT=-1
-HTTPS_PORT=443
-STUN_PORT=3478
 
 if [ "$DERP_CERTMODE" = "acme.sh" ]; then
     DERP_CERTMODE=manual
 fi
 
-if [ $DERP_ENABLE_HTTP == "true" ]; then
-    HTTP_PORT=80
+if [ $DERP_ENABLE_HTTP != "true" ]; then
+    DERP_PORT_HTTP=-1
 fi
 
 s6-setuidgid abc \
     derper \
-        --a=:$HTTPS_PORT \
+        --a=:$DERP_PORT_HTTPS \
         --c=$CONFIG \
         --certdir=$CERTDIR \
         --certmode=$DERP_CERTMODE \
         --hostname=$DERP_HOSTNAME \
-        --http-port=$HTTP_PORT \
+        --http-port=$DERP_PORT_HTTP \
         --stun=$DERP_ENABLE_STUN \
-        --stun-port=$STUN_PORT \
+        --stun-port=$DERP_PORT_STUN \
         --verify-clients=$DERP_VERIFY_CLIENTS

@@ -24,6 +24,9 @@ Notes:
 |----------|---------|-------------|
 | `DERP_HOSTNAME` |  | The hostname of the Derp server (**MUST BE SET**) |
 | `DERP_CERTMODE` | `acme.sh` | The mode of certificate management, should be `letsencrypt`, `acme.sh` or `manual` |
+| `DERP_PORT_HTTP` | `80` | The port of HTTP server |
+| `DERP_PORT_HTTPS` | `443` | The port of HTTPS server |
+| `DERP_PORT_STUN` | `3478` | The port of STUN server |
 | `DERP_ENABLE_HTTP` | `true` | Enable HTTP server |
 | `DERP_ENABLE_STUN` | `true` | Enable [STUN](https://en.wikipedia.org/wiki/STUN) server |
 | `DERP_VERIFY_CLIENTS` | `false` | Verify client certificate, see [official docs](https://tailscale.com/kb/1118/custom-derp-servers#optional-restricting-client-access-to-your-derp-node) |

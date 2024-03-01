@@ -13,3 +13,10 @@ docker buildx build \
     -t ${DOCKER_USER}/${DOCKER_REPO}:latest \
     -t ${DOCKER_USER}/${DOCKER_REPO}:${VERSION} \
     --push .
+
+docker buildx build \
+    --platform ${PLATFORMS} \
+    -f Dockerfile.unsafe \
+    -t ${DOCKER_USER}/${DOCKER_REPO}:latest-unsafe \
+    -t ${DOCKER_USER}/${DOCKER_REPO}:${VERSION}-unsafe \
+    --push .

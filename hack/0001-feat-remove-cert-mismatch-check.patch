@@ -1,0 +1,29 @@
+From e5382acec8e20c307e67a46afe2d1678ef80abfc Mon Sep 17 00:00:00 2001
+From: ngc7331 <ngc7331@outlook.com>
+Date: Fri, 1 Mar 2024 12:55:38 +0800
+Subject: [PATCH] feat: remove cert mismatch check
+
+---
+ cmd/derper/cert.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmd/derper/cert.go b/cmd/derper/cert.go
+index db84aa51..21bd23d6 100644
+--- a/cmd/derper/cert.go
++++ b/cmd/derper/cert.go
+@@ -88,9 +88,9 @@ func (m *manualCertManager) TLSConfig() *tls.Config {
+ }
+ 
+ func (m *manualCertManager) getCertificate(hi *tls.ClientHelloInfo) (*tls.Certificate, error) {
+-	if hi.ServerName != m.hostname {
+-		return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
+-	}
++	// if hi.ServerName != m.hostname {
++	// 	return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
++	// }
+ 
+ 	// Return a shallow copy of the cert so the caller can append to its
+ 	// Certificate field.
+-- 
+2.40.1
+

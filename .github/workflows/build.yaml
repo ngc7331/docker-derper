@@ -10,6 +10,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      - name: Get version
+        run: echo "VERSION=${$(cd tailscale && git describe)##v}" >> $GITHUB_ENV
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -28,4 +32,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ngc7331/derper:latest
+          tags: ngc7331/derper:latest, ngc7331/derper:${{ env.VERSION }}

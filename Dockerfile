@@ -1,6 +1,8 @@
 # Build derper
 FROM --platform=${TARGETPLATFORM} golang:latest AS build
-RUN go install tailscale.com/cmd/derper@main
+COPY . /tmp
+RUN cd /tmp/tailscale/cmd/derper && \
+    go build -o /go/bin/derper
 
 # Build image
 FROM --platform=${TARGETPLATFORM} lscr.io/linuxserver/baseimage-ubuntu:jammy

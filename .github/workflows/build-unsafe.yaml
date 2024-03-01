@@ -12,7 +12,7 @@ jobs:
           submodules: recursive
 
       - name: Get version
-        run: echo "VERSION=${$(cd tailscale && git describe)#v}" >> $GITHUB_ENV
+        run: echo "VERSION=$(cat tailscale/VERSION.txt)" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

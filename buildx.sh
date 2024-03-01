@@ -5,8 +5,7 @@ PLATFORMS=linux/amd64,linux/arm64
 DOCKER_USER=ngc7331
 DOCKER_REPO=derper
 
-VERSION=$(cd tailscale && git describe)
-VERSION=${VERSION#v}
+VERSION=$(cat ./tailscale/VERSION.txt)
 
 docker buildx build \
     --platform ${PLATFORMS} \

@@ -29,7 +29,12 @@ if [ -f /data/cert/$DERP_HOSTNAME.crt ]; then
     s6-setuidgid abc \
         /app/acme.sh/acme.sh \
             --renew $EXTRA_ARGS $ACME_SH_ARGS \
-            --domain $DERP_HOSTNAME
+            --domain $DERP_HOSTNAME || \
+        if [ $? -eq 2 ]; then \
+            echo "[acme.sh] Certificate for $DERP_HOSTNAME is still valid."; \
+        else \
+            exit 1; \
+        fi
 else
     echo "[acme.sh] Issueing certificate for $DERP_HOSTNAME..."
     s6-setuidgid abc \

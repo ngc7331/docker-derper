@@ -23,9 +23,12 @@ echo "0 0 * * * /app/acme.sh/acme.sh --cron $ACME_SH_ARGS" | crontab -
 
 if [ -f /data/cert/$DERP_HOSTNAME.crt ]; then
     echo "[acme.sh] Renewing certificate for $DERP_HOSTNAME..."
+    if [ "$ACME_SH_FORCE_RENEW" == "true" ]; then
+        EXTRA_ARGS="--force"
+    fi
     s6-setuidgid abc \
         /app/acme.sh/acme.sh \
-            --renew --force $ACME_SH_ARGS \
+            --renew $EXTRA_ARGS $ACME_SH_ARGS \
             --domain $DERP_HOSTNAME
 else
     echo "[acme.sh] Issueing certificate for $DERP_HOSTNAME..."

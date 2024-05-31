@@ -3,12 +3,46 @@
 CERTDIR=/data/cert
 CONFIG=/data/derper/derper.key
 
-if [ "$DERP_CERTMODE" = "acme.sh" ]; then
-    DERP_CERTMODE=manual
+function fail() {
+    echo -e "\033[31m$1\033[0m"
+    exit 1
+}
+
+if [ -z "$DERP_PORT_HTTPS" ]; then
+    fail "DERP_PORT_HTTPS must be set"
 fi
 
-if [ $DERP_ENABLE_HTTP != "true" ]; then
+case "$DERP_CERTMODE" in
+    acme.sh)  # treat as manual
+        DERP_CERTMODE=manual
+        ;;
+    letsencrypt|manual)  # do nothing
+        ;;
+    *)
+        fail "invalid DERP_CERTMODE: must be [letsencrypt|acme.sh|manual]"
+        ;;
+esac
+
+if [ -z "$DERP_HOSTNAME" ]; then
+    fail "DERP_HOSTNAME must be set"
+fi
+
+# Disable HTTP by passing --http-port=-1
+if [ "$DERP_ENABLE_HTTP" != "true" ]; then
     DERP_PORT_HTTP=-1
+elif [ -z "$DERP_PORT_HTTP" ]; then
+    fail "DERP_PORT_HTTP must be set if DERP_ENABLE_HTTP is true"
+fi
+
+# Disable STUN by passing --stun=false directly, --stun-port is ignored by derper
+if [ "$DERP_ENABLE_STUN" != "true" ]; then
+    DERP_ENABLE_STUN=false
+elif [ -z "$DERP_PORT_STUN" ]; then
+    fail "DERP_PORT_STUN must be set if DERP_ENABLE_HTTPS is true"
+fi
+
+if [ "$DERP_VERIFY_CLIENTS" != "true" ]; then
+    DERP_VERIFY_CLIENTS=false
 fi
 
 s6-setuidgid abc \

@@ -23,7 +23,7 @@ ENV TZ=Asia/Shanghai
 
 # Derper Envs
 ENV DERP_CERTMODE=acme.sh
-ENV DERP_HOSTNAME=
+ENV DERP_HOSTNAME=derp.example.com
 ENV DERP_PORT_HTTP=80
 ENV DERP_PORT_HTTPS=443
 ENV DERP_PORT_STUN=3478
@@ -32,8 +32,8 @@ ENV DERP_ENABLE_STUN=true
 ENV DERP_VERIFY_CLIENTS=false
 
 # acme.sh Envs
-ENV ACME_SH_EMAIL=
-ENV ACME_SH_DNSAPI=
+ENV ACME_SH_EMAIL=admin@example.com
+ENV ACME_SH_DNSAPI=dns_cf
 ENV ACME_SH_CA=letsencrypt
 ENV ACME_SH_FORCE_RENEW=false
 # ... other dnsapi envs

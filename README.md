@@ -9,15 +9,15 @@ docker run -d --name=derper \
     -p 80:80/tcp \ # Optional, see Note 2
     -p 443:443/tcp \
     -p 3478:3478/udp \ # Optional, see Note 2
-    -e DERPER_HOSTNAME=derp.example.com \
-    -e DERPER_CERTMODE=letsencrypt \
+    -e DERP_HOSTNAME=derp.example.com \
+    -e DERP_CERTMODE=letsencrypt \
     -v /path/to/data:/data:rw \
     -v /path/to/cert:/data/cert:rw \ # Optional, see Note 1
     ngc7331/derper:latest
 ```
 Notes:
-1. A standalone `/data/cert` mapping is not necessary, but recommended if you want to use the `DERPER_CERTMODE=manual`, by which you can provide your own certificate and key files.
-2. If you want to disable HTTP or STUN server, you can remove the corresponding port mapping. Also don't forget to set `DERPER_ENABLE_HTTP` or `DERPER_ENABLE_STUN` to `false`.
+1. A standalone `/data/cert` mapping is not necessary, but recommended if you want to use the `DERP_CERTMODE=manual`, by which you can provide your own certificate and key files.
+2. If you want to disable HTTP or STUN server, you can remove the corresponding port mapping. Also don't forget to set `DERP_ENABLE_HTTP` or `DERP_ENABLE_STUN` to `false`.
 
 ### Derp Environment Variables
 | Variable | Default | Description |

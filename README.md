@@ -56,3 +56,28 @@ docker run ... \
 Note that `DERP_CERTMODE=acme.sh` can be used only with a DNS API to handle DNS chanllenge automatically.
 
 Use `DERP_CERTMODE=letsencrypt` if you want to use HTTP challenge (as the standalone mode of acme.sh does).
+
+### Unsafe version
+In some cases, tls handshake errors/certificate validation failures may be encountered with the default version (e.g. Using a unregistered domain in China mainland, or using a self-signed certificate).
+
+You may want to just skip the certificate validation to make it work. In this case, you can use the `unsafe` version of the image by appending `-unsafe` to the tag (e.g. `docker pull ngc7331/derper:latest-unsafe`).
+
+**NOTE: As the name suggests, this may break the security of the connection and leave it vulnerable to man-in-the-middle attacks. Please use with caution.**
+
+Also, you may set `InsecureForTests` to `true` in your tailscale's ACL rules:
+```json
+...
+"derpMap": {
+  "Regions": {
+    "<region-id>": {
+      ...
+      "Nodes": [
+        {
+          ...
+          "InsecureForTests": true,
+        },
+      ],
+    },
+  },
+},
+```

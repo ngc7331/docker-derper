@@ -5,6 +5,13 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          - dockerfile-suffix: ""
+            tag-suffix: ""
+          - dockerfile-suffix: ".unsafe"
+            tag-suffix: "-unsafe"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +36,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          file: ./Dockerfile${{ matrix.dockerfile-suffix }}
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ngc7331/derper:latest, ngc7331/derper:${{ env.VERSION }}
+          tags: ngc7331/derper:latest${{ matrix.tag-suffix }}, ngc7331/derper:${{ env.VERSION }}${{ matrix.tag-suffix }}

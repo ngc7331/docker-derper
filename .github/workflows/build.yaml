@@ -53,5 +53,5 @@ jobs:
           tags: |
             ngc7331/derper:latest${{ matrix.tag-suffix }}
             ngc7331/derper:${{ env.VERSION }}${{ matrix.tag-suffix }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest${{ matrix.tag-suffix }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ env.VERSION }}${{ matrix.tag-suffix }}
+            ghcr.io/${{ github.repository }}:latest${{ matrix.tag-suffix }}
+            ghcr.io/${{ github.repository }}:${{ env.VERSION }}${{ matrix.tag-suffix }}

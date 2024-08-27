@@ -1,13 +1,15 @@
 # Build derper
-FROM --platform=${TARGETPLATFORM} golang:latest AS build
+FROM golang:alpine AS build
 COPY . /tmp
 RUN cd /tmp/tailscale/cmd/derper && \
     go build -o /go/bin/derper
 
 # Build image
-FROM --platform=${TARGETPLATFORM} lscr.io/linuxserver/baseimage-ubuntu:jammy
+FROM ghcr.io/ngc7331/docker-baseimage-alpine:3.20
 
 # install acme.sh
+RUN apk add --no-cache \
+        openssl
 COPY acme.sh /app/acme.sh
 
 # install derper

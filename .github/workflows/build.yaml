@@ -48,7 +48,7 @@ jobs:
         with:
           file: ./Dockerfile${{ matrix.dockerfile-suffix }}
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/riscv64
           push: true
           tags: |
             ngc7331/derper:latest${{ matrix.tag-suffix }}

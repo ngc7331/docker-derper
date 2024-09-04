@@ -12,46 +12,31 @@ jobs:
             tag-suffix: ""
           - dockerfile-suffix: ".unsafe"
             tag-suffix: "-unsafe"
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Get version
-        run: echo "VERSION=$(cat tailscale/VERSION.txt)" >> $GITHUB_ENV
+        id: version
+        run: echo "VERSION=$(cat tailscale/VERSION.txt)" >> $GITHUB_OUTPUT
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Build
+        uses: ngc7331/actions@docker-build
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_PASS }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
+          name: derper
+          version: ${{ steps.version.outputs.VERSION }}
+          suffix: ${{ matrix.tag-suffix }}
+          suffix_detailed: ${{ matrix.tag-suffix }}
           file: ./Dockerfile${{ matrix.dockerfile-suffix }}
-          context: .
           platforms: linux/amd64,linux/arm64,linux/riscv64
-          push: true
-          tags: |
-            ngc7331/derper:latest${{ matrix.tag-suffix }}
-            ngc7331/derper:${{ env.VERSION }}${{ matrix.tag-suffix }}
-            ghcr.io/${{ github.repository }}:latest${{ matrix.tag-suffix }}
-            ghcr.io/${{ github.repository }}:${{ env.VERSION }}${{ matrix.tag-suffix }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

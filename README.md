@@ -1,8 +1,6 @@
 # Docker-derper
 An unofficial s6-overlay based Docker image for custom [Tailscale Derp server](https://tailscale.com/kb/1118/custom-derp-servers) with built-in [acme.sh](https://github.com/acmesh-official/acme.sh)
 
-**THIS IS STILL WIP**
-
 ## Usage
 ```bash
 docker run -d --name=derper \
@@ -13,11 +11,13 @@ docker run -d --name=derper \
     -e DERP_CERTMODE=letsencrypt \
     -v /path/to/data:/data:rw \
     -v /path/to/cert:/data/cert:rw \ # Optional, see Note 1
+    -v /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock:rw \ # Optional, see Note 3
     ngc7331/derper:latest
 ```
 Notes:
 1. A standalone `/data/cert` mapping is not necessary, but recommended if you want to use the `DERP_CERTMODE=manual`, by which you can provide your own certificate and key files.
 2. If you want to disable HTTP or STUN server, you can remove the corresponding port mapping. Also don't forget to set `DERP_ENABLE_HTTP` or `DERP_ENABLE_STUN` to `false`.
+3. If `DERP_VERIFY_CLIENTS` is set to true, derp needs to communicate with the tailscale client via `tailscaled.sock` to verify the clients. So you must have a tailscale daemon running on host and mount `tailscaled.sock` inside the container.
 
 ### Derp Environment Variables
 | Variable | Default | Description |

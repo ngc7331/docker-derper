@@ -50,4 +50,5 @@ s6-setuidgid abc \
         --install-cert $ACME_SH_ARGS \
         --domain $DERP_HOSTNAME \
         --fullchain-file /data/cert/$DERP_HOSTNAME.crt \
-        --key-file /data/cert/$DERP_HOSTNAME.key
+        --key-file /data/cert/$DERP_HOSTNAME.key \
+        --reloadcmd "pgrep -u abc derper | xargs kill || true"

@@ -1,0 +1,31 @@
+name: update
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.BOT_TOKEN }}
+
+      - name: Check Upstream update
+        id: check_upstream
+        uses: ngc7331/actions@check-update
+        with:
+          cmd: echo v`curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq '.name' | grep -oP 'v\K[0-9.]+'`
+          tag: tailscale version
+          desp: tailscale
+          local_mode: submodule
+          version_file: tailscale
+          git_commit: true
+          git_user: ngc7331-bot
+          git_email: 77287747+ngc7331-bot@users.noreply.github.com

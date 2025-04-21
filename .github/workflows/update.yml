@@ -21,7 +21,7 @@ jobs:
         id: check_upstream
         uses: ngc7331/actions@check-update
         with:
-          cmd: echo v`curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq '.name' | grep -oP 'v\K[0-9.]+'`
+          cmd: curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq '.tag_name' | grep -oP 'v[0-9.]+'
           tag: tailscale version
           desp: tailscale
           local_mode: submodule

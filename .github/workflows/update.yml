@@ -17,15 +17,26 @@ jobs:
           submodules: recursive
           token: ${{ secrets.BOT_TOKEN }}
 
-      - name: Check Upstream update
-        id: check_upstream
+      - name: Check tailscale update
+        id: check_tailscale
         uses: ngc7331/actions@check-update
         with:
           cmd: curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | jq '.tag_name' | grep -oP 'v[0-9.]+'
-          tag: tailscale version
-          desp: tailscale
+          tag: tailscale
           local_mode: submodule
           version_file: tailscale
+          git_commit: true
+          git_user: ngc7331-bot
+          git_email: 77287747+ngc7331-bot@users.noreply.github.com
+
+      - name: Check acme.sh update
+        id: check_acmesh
+        uses: ngc7331/actions@check-update
+        with:
+          cmd: curl -s https://api.github.com/repos/acmesh-official/acme.sh/releases/latest | jq '.tag_name' | grep -oP '[0-9.]+'
+          tag: acme.sh
+          local_mode: submodule
+          version_file: acme.sh
           git_commit: true
           git_user: ngc7331-bot
           git_email: 77287747+ngc7331-bot@users.noreply.github.com

@@ -3,6 +3,8 @@
 CERTDIR=/data/cert
 CONFIG=/data/derper/derper.key
 
+EXTRA_ARGS=()
+
 function fail() {
     echo -e "\033[31m$1\033[0m"
     exit 1
@@ -13,13 +15,26 @@ if [ -z "$DERP_PORT_HTTPS" ]; then
 fi
 
 case "$DERP_CERTMODE" in
-    acme.sh)  # treat as manual
+    acme.sh) # handled by init-cert, treat as manual here
         DERP_CERTMODE=manual
         ;;
-    letsencrypt|manual)  # do nothing
+    manual) # do nothing
+        ;;
+    letsencrypt) # acme_email is optional
+        if [ -n "$DERP_ACME_EMAIL" ]; then
+            EXTRA_ARGS+=("--acmeEmail $DERP_ACME_EMAIL")
+        fi
+        ;;
+    gcp)
+        if [ -z "$DERP_ACME_EABKID" ] || [ -z "$DERP_ACME_EABKEY" ] || [ -z "$DERP_ACME_EMAIL" ]; then
+            fail "DERP_ACME_EABKID, DERP_ACME_EABKEY and DERP_ACME_EMAIL must be set when DERP_CERTMODE is gcp"
+        fi
+        EXTRA_ARGS+=("--acmeEABKid $DERP_ACME_EABKID")
+        EXTRA_ARGS+=("--acmeEABKey $DERP_ACME_EABKEY")
+        EXTRA_ARGS+=("--acmeEmail $DERP_ACME_EMAIL")
         ;;
     *)
-        fail "invalid DERP_CERTMODE: must be [letsencrypt|acme.sh|manual]"
+        fail "invalid DERP_CERTMODE: must be [acme.sh|manual|letsencrypt|gcp]"
         ;;
 esac
 
@@ -38,7 +53,7 @@ fi
 if [ "$DERP_ENABLE_STUN" != "true" ]; then
     DERP_ENABLE_STUN=false
 elif [ -z "$DERP_PORT_STUN" ]; then
-    fail "DERP_PORT_STUN must be set if DERP_ENABLE_HTTPS is true"
+    fail "DERP_PORT_STUN must be set if DERP_ENABLE_STUN is true"
 fi
 
 if [ "$DERP_VERIFY_CLIENTS" != "true" ]; then
@@ -47,12 +62,13 @@ fi
 
 s6-setuidgid abc \
     derper \
-        --a=:$DERP_PORT_HTTPS \
-        --c=$CONFIG \
-        --certdir=$CERTDIR \
-        --certmode=$DERP_CERTMODE \
-        --hostname=$DERP_HOSTNAME \
-        --http-port=$DERP_PORT_HTTP \
-        --stun=$DERP_ENABLE_STUN \
-        --stun-port=$DERP_PORT_STUN \
-        --verify-clients=$DERP_VERIFY_CLIENTS
+        --a=":$DERP_PORT_HTTPS" \
+        --c="$CONFIG" \
+        --certdir="$CERTDIR" \
+        --certmode="$DERP_CERTMODE" \
+        --hostname="$DERP_HOSTNAME" \
+        --http-port="$DERP_PORT_HTTP" \
+        --stun="$DERP_ENABLE_STUN" \
+        --stun-port="$DERP_PORT_STUN" \
+        --verify-clients="$DERP_VERIFY_CLIENTS" \
+        ${EXTRA_ARGS[@]}

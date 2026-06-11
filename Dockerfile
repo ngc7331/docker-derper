@@ -5,7 +5,7 @@ RUN cd /tmp/tailscale/cmd/derper && \
     go build -o /go/bin/derper
 
 # Build image
-FROM ghcr.io/linuxserver/baseimage-alpine:3.23
+FROM ghcr.io/linuxserver/baseimage-alpine:3.24
 
 # install acme.sh
 RUN apk add --no-cache \

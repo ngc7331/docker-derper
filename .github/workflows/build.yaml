@@ -37,7 +37,7 @@ jobs:
           suffix: ${{ matrix.tag-suffix }}
           suffix_detailed: ${{ matrix.tag-suffix }}
           file: ./Dockerfile${{ matrix.dockerfile-suffix }}
-          platforms: linux/amd64,linux/arm64,linux/riscv64
+          platforms: linux/amd64,linux/arm64
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
           DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
